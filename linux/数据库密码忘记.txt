@@ -1,0 +1,29 @@
+数据库密码忘记或者无权限等问题：
+1 先关闭数据库，结束所有mysql进程
+service mysqld stop
+killall -9 mysqld
+
+2 安全模式登陆数据库
+mysql_safe --skip-grant-tables &
+
+3 登陆数据库
+mysql -ur
+
+4 更改root密码
+update mysql.user set authentication_string=password('new_passwd') where `User`='account';
+会有报错，接着
+flush privileges;
+
+5 quit数据库
+
+6 去/etc/my.cnf注释掉
+[mysqld]
+# --skip-grant-tables
+
+7 service mysqld restart
+
+8 以account账户和新密码登陆
+
+[备用]
+set sql_safe_updates = 0; #关闭安全模式
+set sql_safe_updates = 1; #打开安全模式
